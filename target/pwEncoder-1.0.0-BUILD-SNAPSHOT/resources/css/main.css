@@ -1,0 +1,126 @@
+@charset "utf-8";
+
+nav.navbar {
+	background: crimson;
+}
+
+.nav-link {
+	color : white;
+}
+
+.nav-link:hover{color:yellow;}
+
+.login:hover, .register:hover {color:black}
+
+.nav.nav-tabs a{
+	color:black;
+}
+
+/* fa 아이콘 스타일 */
+.findIdPw .fa {
+	color:#aaf;
+}
+
+.findIdPw a{
+	font-size:13px;
+	color: #555;
+	text-decoration: none;
+}
+
+/* vertical-align: 3px; 수직정렬 기준선을 3px 위로 조정*/
+.findIdPw a+a:before{
+	content:'';
+	display:inline-block;
+	background-color:#888;
+	width:3px;
+	height:3px;
+	vertical-align: 3px; 
+	margin: 0 5px;
+}
+
+/* myProfile */
+.myProfile {
+	color:white;
+	text-decoration: none;
+	line-height: 42px;
+}
+
+.myProfile:hover{
+	color:white;
+}
+
+/* 인증코드 타이머 */
+#confirmEmail {
+	/* display:none; *//*존재가 없어짐*/ 
+	/* opacity:0; */
+	visibility:hidden; /*안보일뿐 자리차지*/
+	height:0; 
+}
+
+.code-msg {
+	display:none;
+	font-size:11px;
+	color:green;
+}
+
+.input-code {
+	outline:none;
+	border-radius:6px 0 0 6px;
+	border:1px solid #ced4da;
+	width:70%;
+	padding: 6px 12px;
+	border-right:0;
+}
+
+.time {
+	border:1px solid #ced4da;
+	border-radius:0 6px 6px 0;
+	outline:none;
+	width:30%;
+	padding: 6px 12px;
+	border-left:0;
+	color:red;
+	font-size:13px; 
+}
+
+/* 댓글 리스트 */
+.mb-2 div{
+	cursor:pointer;
+}
+
+.mb-2 div:hover{
+	background-color:#eee;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

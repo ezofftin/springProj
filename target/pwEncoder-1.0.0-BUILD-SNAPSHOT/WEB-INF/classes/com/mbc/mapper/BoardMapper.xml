@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbc.mapper.BoardMapper">
+  <!-- 게시글 등록 -->
+  <insert id="insert" parameterType="boardDTO">
+  	INSERT INTO tbl_board(subject, contents, writer)
+  	VALUES(#{subject}, #{contents}, #{writer})
+  </insert>
+  
+  <!-- 게시글 리스트 -->
+<!--   <select id="getList" resultType="boardDTO">  	 
+  	SELECT * FROM tbl_board LIMIT #{startIndex}, #{cntPerPage} 
+  </select> -->
+
+  <sql id="criteria">
+	  <!-- 제목 검색 
+  		Oracle 문자열 결합 : ||
+  		MySQL 문자열 결합 : CONCAT()
+  		
+  		'S'문자열 변환이 없으면 ascii(숫자)로 인식
+  		Numberformat 예외 발생
+  	  -->
+  	<if test="searchType == 'S'.toString()">
+	  	WHERE subject LIKE CONCAT('%',#{keyword},'%')
+  	</if>
+  	<!-- 내용 검색 -->
+  	<if test="searchType == 'C'.toString()">
+  		WHERE contents LIKE CONCAT('%',#{keyword},'%')
+  	</if>
+  	<!-- 글쓴이 검색 -->
+  	<if test="searchType == 'W'.toString()">
+  		WHERE writer LIKE CONCAT('%',#{keyword},'%')
+  	</if>
+  	
+  	<if test="searchType == 'SC'.toString()">
+  		WHERE subject LIKE CONCAT('%',#{keyword},'%')
+  		OR contents LIKE CONCAT('%',#{keyword},'%')
+  	</if>
+  	
+  	<if test="searchType == 'SW'.toString()">
+  		WHERE subject LIKE CONCAT('%',#{keyword},'%')
+  		OR writer LIKE CONCAT('%',#{keyword},'%')
+  	</if>
+  	
+  	<if test="searchType == 'SCW'.toString()">
+  		WHERE subject LIKE CONCAT('%',#{keyword},'%')
+  		OR contents LIKE CONCAT('%',#{keyword},'%')
+  		OR writer LIKE CONCAT('%',#{keyword},'%')
+  	</if>
+  </sql> 	
+
+  <select id="getList" resultType="boardDTO">  	 
+  	SELECT * FROM tbl_board 
+  	<include refid="criteria"></include>
+  	ORDER BY bid DESC
+  	LIMIT #{startIndex}, #{cntPerPage}
+  </select>
+  
+  <!-- 게시글 상세보기 -->
+  <select id="view" resultType="boardDTO">
+  	SELECT * FROM tbl_board WHERE bid = #{bid}
+  </select>
+  
+  <!-- 게시글 수정하기 -->
+  <update id="update">
+  	UPDATE tbl_board SET subject=#{subject}, contents=#{contents}
+  	WHERE bid = #{bid}
+  </update>
+  
+  <!-- 게시글 삭제하기 -->
+  <delete id="delete">
+  	DELETE FROM tbl_board WHERE bid = #{bid}
+  </delete>
+  
+  <!-- 조회수 추가하기 -->
+  <update id="hitAdd">
+  	UPDATE tbl_board SET hit = hit + 1
+  	WHERE bid=#{bid}
+  </update>
+  
+  <!--검색어 없을 때 전체 게시글 수 -->
+<!--   <select id="totalCnt" resultType="Integer">
+  	SELECT count(*) FROM tbl_board
+  </select> -->
+  
+  <!-- 검색어 있을 때 전체 게시글 수 -->
+  <select id="totalCnt" resultType="Integer">
+  	SELECT count(*) FROM tbl_board
+  	<include refid="criteria"></include>
+  </select>
+    
+  <!-- 댓글 추가/삭제 시 replyCnt값을 수정 -->
+  <update id="updateReplyCnt">
+  	UPDATE tbl_board SET replyCnt = replyCnt + #{n}
+  	WHERE bid=#{bid}
+  </update>
+  
+</mapper>
+

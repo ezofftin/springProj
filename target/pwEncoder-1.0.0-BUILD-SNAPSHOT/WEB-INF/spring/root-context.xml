@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<!--  
+	  # 자바 코드를 이용한 객체 생성
+	  package mbc.web;
+	  
+	  class Member{
+	  	private String name;
+	  	private int age;
+	  }	  
+	  Member member = new Member();	  
+	  
+	  # 위의 Member class를 xml을 이용하여 객체 생성
+	  <bean id="member" class="mbc.web.Member">	  
+	  
+	  # bean 태그를 이용해서 객체가 생성되는 것은 
+	    스프링의 리플렉션 기법이 적용되기 때문	  
+	  Class memberClazz = Class.forName("mbc.web.Member")
+	  member = memberClazz.newInstance()
+	-->
+	
+	
+	<!-- 데이터베이스 설정 -->
+	<!-- db.properties 파일 연결 -->
+	<bean id="propertyPlaceholderConfigurer" 
+			class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="/WEB-INF/mybatis/db.properties"></property>
+	</bean>	
+
+<!-- #################### Email 인증 Bean 등록 ####################-->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="mbcofftin@gmail.com" />
+		<property name="password" value="bhvzyyeeedwkcsjs" />
+		<property name="defaultEncoding" value="utf-8" />
+		
+		<property name="javaMailProperties">
+        	<props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.debug">true</prop>
+                <prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+				<prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
+            </props>
+      	</property>
+	</bean>
+
+	
+<!-- #################### HikariCP 사용전 설정 ################### 
+	jdbc 설정(DataSource : 데이터베이스)                     -->
+	
+<!-- 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+		<property name="driverClass" value="${driver}"/>
+		<property name="url" value="${url}"/>
+		<property name="username" value="${username}"/>
+		<property name="password" value="${password}"/>
+	</bean> 
+	-->
+	<!-- MyBatis SqlSessionFactory 설정 -->
+	<!-- <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="/WEB-INF/mybatis/config.xml" />
+		<property name="mapperLocations" value="classpath:com/mbc/mapper/*.xml" />
+	</bean> 
+    ###################################################################### -->
+	
+	
+	<!-- HikariCP 설정 : JDBC Connection Pool 라이브러리 -->
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<property name="driverClassName" value="${driver}"/>
+		<property name="jdbcUrl" value="${url}"/>
+		<property name="username" value="${username}"/>
+		<property name="password" value="${password}"/>
+	</bean>
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+		<constructor-arg ref="hikariConfig" />
+	</bean>
+	
+	<!-- MyBatis SqlSessionFactory 설정 -->
+	<bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="/WEB-INF/mybatis/config.xml" />
+		
+		<!-- 
+			<property name="mapperLocations" value="classpath:com/mbc/mapper/*.xml" /> 
+		-->
+	</bean>
+	<!-- BcryptPasswordEncoder -->
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
+	
+	
+	<context:component-scan base-package="com.mbc.service" />
+	<mybatis-spring:scan base-package="com.mbc.mapper" />
+</beans>

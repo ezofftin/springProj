@@ -1,0 +1,17 @@
+drop table tbl_reply;
+create table tbl_reply(
+	rno int auto_increment primary key,
+    bid int,
+    r_contents varchar(1000) not null,
+    replyer varchar(20) not null,
+    r_date datetime default now(),
+    update_date datetime default now(),
+    
+    -- bid 를 외래키로 설정
+    foreign key(bid) references tbl_board(bid)
+);
+
+insert into tbl_reply(bid, r_contents, replyer)
+values(138, '댓글 테스트', '홍길동');
+
+select * from tbl_reply;

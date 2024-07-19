@@ -1,0 +1,24 @@
+drop table tbl_board;
+create table tbl_board(
+	bid int auto_increment primary key,
+    subject varchar(100) not null,
+    contents varchar(3000) not null,
+    hit int default 0,
+    writer varchar(50) not null,
+                     -- now() == oracle sysdate
+    reg_date datetime default now() not null
+);
+
+insert into tbl_board(subject, contents, writer)
+values('테스트!~~', '테스트', '아무개');
+
+select * from tbl_board order by bid desc;
+
+-- 게시판 테이블에 replycnt 컬럼을 추가
+alter table tbl_board add (replyCnt int default 0);
+
+-- Edit / preferences, SQL Editor > Safe updates 체크 해제
+-- 초기 셋팅
+update tbl_board set replyCnt = ( select count(rno)
+                                  from tbl_reply
+								  where tbl_reply.bid = tbl_board.bid);

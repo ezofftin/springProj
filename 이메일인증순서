@@ -1,0 +1,22 @@
+## 이메일 관련 Protocol
+- SMTP ( 메일 전송시 사용되는 프로토콜)
+- POP3/IMAP ( 수신시 사용되는 프로토콜)
+
+## 구글의 메일 서버를 사용하기 위한 순서
+1. google 보안 : 2단계 인증 사용 설정
+   - 크롬 우측 상단 계정 아이콘 클릭 --> 구글 계정 관리 메뉴 선택
+   - 2단계 인증 "사용" 설정
+   - 검색란에 "앱" 입력 --> "앱 비밀번호"선택
+   - 앱이름 셋팅 후 만들기 클릭 --> 16자리 비밀번호 생성
+
+2. pom.xml API 추가
+   - 메이븐 --> javax.mail 검색
+   - 메이븐 --> spring context support검색 (스프링 버전에 맞게 선택) 
+
+3. servlet-context.xml에 JavaMailSender Bean 등록
+   - google(gmail) SMTP 사용 설정
+     (구글 이메일, 앱 비밀번호(16자리))
+
+4. 컨트롤러/서비스 단에서 JavaMailServer 주입 받아서 전송 내용 셋팅
+   - MimeMessage 객체 사용(메일제목, 메일내용(인증코드))
+   - UUID(java.util)객체를 사용해서 랜덤하게 인증코드생성
